@@ -27,7 +27,7 @@ public sealed class UserImageData
     public string PreviewUrl { get; set; } = null;
 }
 
-public static class APIServices
+public static class APIService
 {
     public const string AuthUrl = "https://dev.sensetower.io/accounts/api/v1/accounts/identity/logon";
     public const string GetMyImagesUrl = "https://dev.sensetower.io/images/api/v1/images/get";
@@ -64,19 +64,7 @@ public static class APIServices
     {
         var utcs = new UniTaskCompletionSource<UserImageData[]>();
 
-        if (AuthData == null)
-        {
-            Debug.LogWarning("Not authorized");
-            utcs.TrySetResult(new UserImageData[0]);
-            return await utcs.Task;
-            //await Auth();
-            //if (AuthData == null)
-            //{
-            //    Debug.LogWarning("Can't auth");
-            //    utcs.TrySetResult(new UserImageData[0]);
-            //    return await utcs.Task;
-            //}
-        }
+        await CheckAuth();
 
         var options = new RequestHelper()
         {
@@ -104,12 +92,7 @@ public static class APIServices
     {
         var utcs = new UniTaskCompletionSource<UserSpaceData[]>();
 
-        if (AuthData == null)
-        {
-            Debug.LogWarning("Not authorized");
-            utcs.TrySetResult(new UserSpaceData[0]);
-            return await utcs.Task;
-        }
+        await CheckAuth();
 
         var options = new RequestHelper()
         {
@@ -135,8 +118,10 @@ public static class APIServices
 
     public static async UniTask<bool> ReplaceAllMyPlacePictures(Guid myPlaceId, 
         Dictionary<int, UserImageData> myPlaceImages)
-    {
+    {       
         var utcs = new UniTaskCompletionSource<bool>();
+
+        await CheckAuth();
 
         var form = new Dictionary<string, string>
         {
@@ -191,11 +176,24 @@ public static class APIServices
         })
         .Catch(err =>
         {
-            Debug.LogWarning($"{typeof(APIServices).Name}. {nameof(Post)}. {err.Message}. Url: {options.Uri}");
+            Debug.LogWarning($"{typeof(APIService).Name}. {nameof(Post)}. {err.Message}. Url: {options.Uri}");
             utcs.TrySetResult(DeserializeData<T>(null));
         });
 
         return await utcs.Task;
+    }
+
+    private static async UniTask CheckAuth()
+    {
+        if (string.IsNullOrEmpty(AuthData.AccessToken))
+        {
+            await Auth();
+            if (APIService.AuthData == null)
+            {
+                Debug.LogWarning($"{nameof(CheckAuth)}. Auth error.");
+                return;
+            }
+        }
     }
 
     private static T DeserializeData<T>(ResponseHelper response) where T : class
