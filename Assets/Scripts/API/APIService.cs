@@ -104,9 +104,9 @@ namespace API
             await CheckAuth();
 
             var form = new Dictionary<string, string>
-        {
-            { "SpaceId", myPlaceId.ToString() }
-        };
+            {
+                { "SpaceId", myPlaceId.ToString() }
+            };
 
             int counter = 0;
             foreach (var i in myPlaceImages)
@@ -121,9 +121,9 @@ namespace API
                 Uri = ReplaceAllMyPlacePicturesUrl,
                 SimpleForm = form,
                 Headers = new Dictionary<string, string>()
-            {
-                {"Authorization", "Bearer " + AuthData.AccessToken}
-            }
+                {
+                    {"Authorization", "Bearer " + AuthData.AccessToken}
+                }
             };
 
             RestClient.Put(options).Then(response =>
