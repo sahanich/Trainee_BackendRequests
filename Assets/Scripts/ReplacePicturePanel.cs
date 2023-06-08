@@ -23,13 +23,13 @@ public class ReplacePicturePanel : MonoBehaviour
             picture.PictureClicked += OnPictureClicked;
             _pictureInstances.Add(picture);
         }
-        PicturesContent.gameObject.SetActive(true);
+        gameObject.SetActive(true);
     }
 
     public void HidePanel()
     {
         Clear();
-        PicturesContent.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     private void Clear()
