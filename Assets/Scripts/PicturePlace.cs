@@ -1,11 +1,10 @@
-﻿using UnityEngine;
+﻿using API;
+using UnityEngine;
 
 public class PicturePlace : MonoBehaviour
 {
     [SerializeField]
     private int Number;
-    //[SerializeField]
-    //private Button ReplacePictureButton;
     [SerializeField]
     private UserPicture Picture;
     [SerializeField]
@@ -17,14 +16,12 @@ public class PicturePlace : MonoBehaviour
 
     private void OnEnable()
     {
-        //ReplacePictureButton.onClick.AddListener(OnReplacePictureButtonClick);
         Picture.PictureClicked += OnReplacePictureButtonClick;
         ReplacePicturePanel.PictureForReplaceSelected += OnPictureForReplaceSelected;
     }
 
     private void OnDisable()
     {
-        //ReplacePictureButton.onClick.RemoveListener(OnReplacePictureButtonClick);
         Picture.PictureClicked -= OnReplacePictureButtonClick;
         ReplacePicturePanel.PictureForReplaceSelected -= OnPictureForReplaceSelected;
     }

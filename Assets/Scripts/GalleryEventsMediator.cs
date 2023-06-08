@@ -1,4 +1,5 @@
-﻿using System;
+﻿using API;
+using System;
 
 public class GalleryEventsMediator
 {
